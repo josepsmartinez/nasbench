@@ -99,7 +99,7 @@ from nasbench.lib import evaluate
 from nasbench.lib import model_metrics_pb2
 from nasbench.lib import model_spec as _model_spec
 import numpy as np
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
 
 # Bring ModelSpec to top-level for convenience. See lib/model_spec.py.
 ModelSpec = _model_spec.ModelSpec
@@ -143,7 +143,11 @@ class NASBench(object):
     # {108} for the smaller dataset with only the 108 epochs.
     self.valid_epochs = set()
 
-    for serialized_row in tf.python_io.tf_record_iterator(dataset_file):
+    # TODO(josepsmartinez): solve warning
+    import tensorflow as tf2
+    for serialized_row in tf2.data.TFRecordDataset(dataset_file):
+      serialized_row = serialized_row.numpy()
+
       # Parse the data from the data file.
       module_hash, epochs, raw_adjacency, raw_operations, raw_metrics = (
           json.loads(serialized_row.decode('utf-8')))

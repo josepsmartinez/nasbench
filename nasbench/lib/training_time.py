@@ -19,7 +19,7 @@ from __future__ import division
 from __future__ import print_function
 
 import collections
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
 
 # Name of scope where to put all timing-related ops and variables.
 _SCOPE_NAME = 'timing'
